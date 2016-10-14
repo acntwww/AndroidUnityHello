@@ -1,0 +1,42 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.2.1'
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+def getUnityAndroidAssertHome(){
+    Properties properties = new Properties();
+    properties.load(project.rootProject.file("local.properties").newDataInputStream())
+    return properties.getProperty("UNITY_ANDROID")
+}
+
+task copy2Unity(dependsOn: ['copyAar2Unity','copyMenifest2Unity'])
+
+
+task copyAar2Unity(type: Copy){
+    from "app/build/outputs/aar/app-debug.aar"
+    into getUnityAndroidAssertHome()
+}
+
+task copyMenifest2Unity(type: Copy){
+    from "app/src/main/AndroidManifest.xml"
+    into getUnityAndroidAssertHome()
+}
